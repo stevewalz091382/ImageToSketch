@@ -1,73 +1,510 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo to Sketch Converter</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(to bottom right,#f9fafb,#e5e7eb);min-height:100vh;padding:1rem}.container{max-width:1200px;margin:0 auto}.header{text-align:center;margin-bottom:2rem}.header h1{font-size:2rem;font-weight:bold;color:#1f2937;margin-bottom:.5rem}.header p{color:#6b7280}.card{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem;margin-bottom:1.5rem}.upload-area{border:4px dashed #d1d5db;border-radius:.5rem;padding:3rem;text-align:center;cursor:pointer;transition:border-color .3s;max-width:28rem;margin:0 auto}.upload-area:hover{border-color:#60a5fa}.upload-icon{width:4rem;height:4rem;margin:0 auto 1rem;color:#9ca3af}.upload-area h3{font-size:1.125rem;font-weight:500;color:#374151;margin-bottom:.5rem}.upload-area p{font-size:.875rem;color:#6b7280}.hidden{display:none!important}.btn{padding:.5rem 1rem;border-radius:.5rem;font-weight:500;cursor:pointer;border:none;transition:all .3s;font-size:.875rem;display:inline-flex;align-items:center;gap:.5rem}.btn-primary{background:#2563eb;color:white}.btn-primary:hover:not(:disabled){background:#1d4ed8}.btn-primary:disabled{background:#9ca3af;cursor:not-allowed}.btn-secondary{background:#e5e7eb;color:#374151}.btn-secondary:hover{background:#d1d5db}.btn-success{background:#16a34a;color:white}.btn-success:hover{background:#15803d}.btn-warning{background:#d97706;color:white}.btn-warning:hover{background:#b45309}.btn-outline-warning{background:white;color:#d97706;border:2px solid #d97706}.btn-outline-warning:hover{background:#fef3c7}.grid{display:grid;gap:1.5rem}.grid-2{grid-template-columns:1fr}@media (min-width:768px){.grid-2{grid-template-columns:repeat(2,1fr)}.header h1{font-size:2.25rem}}.image-container{border:2px solid #e5e7eb;border-radius:.5rem;overflow:hidden;background:#f9fafb;position:relative;min-height:250px}.image-container.white-bg{background:white}.image-container img,.image-container canvas{width:100%;height:auto;display:block}.canvas-cursor-crosshair{cursor:crosshair}.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}.placeholder-icon{width:3rem;height:3rem;margin:0 auto .5rem;color:#d1d5db}.placeholder p{font-size:.875rem;color:#9ca3af}.slider-container{margin:1rem 0}.slider-container label{display:block;font-size:.875rem;font-weight:500;color:#374151;margin-bottom:.5rem}.slider-wrapper{display:flex;align-items:center;gap:1rem}.slider{flex:1;height:.5rem;border-radius:.25rem;background:#e5e7eb;outline:none}.slider::-webkit-slider-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer}.slider::-moz-range-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer;border:none}.slider-value{min-width:3rem;text-align:right;font-size:.875rem;color:#6b7280}.eraser-panel{padding:1rem;background:#fef3c7;border-radius:.5rem;border:1px solid #fcd34d;margin:1rem 0}.eraser-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap}.eraser-info{display:flex;align-items:center;gap:.75rem}.eraser-icon{width:2.5rem;height:2.5rem;background:white;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}.eraser-circle{width:1.5rem;height:1.5rem;background:#1f2937;border-radius:50%}.eraser-text h4{font-weight:500;color:#1f2937;margin-bottom:.25rem}.eraser-text p{font-size:.875rem;color:#6b7280}.eraser-controls{padding-top:1rem;border-top:1px solid #fcd34d}.format-options{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem}.format-option{display:flex;align-items:center;gap:.5rem;cursor:pointer}.format-option input[type="radio"]{width:1rem;height:1rem;cursor:pointer}.format-option label{font-size:.875rem;color:#374151;cursor:pointer}.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem}.section-header h3{font-weight:500;color:#374151}.instructions{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem}.instructions h3{font-size:1.125rem;font-weight:600;color:#1f2937;margin-bottom:1rem}.instructions ol{padding-left:1.5rem;color:#6b7280;font-size:.875rem}.instructions li{margin-bottom:.5rem}.button-group{display:flex;gap:1rem;justify-content:center;padding-top:1rem}.top-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}.top-controls h2{font-size:1.25rem;font-weight:600;color:#1f2937}
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Photo to Sketch Converter</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(to bottom right,#f9fafb,#e5e7eb);min-height:100vh;padding:1rem}
+    .container{max-width:1200px;margin:0 auto}
+    .header{text-align:center;margin-bottom:2rem}
+    .header h1{font-size:2rem;font-weight:bold;color:#1f2937;margin-bottom:.5rem}
+    .header p{color:#6b7280}
+    .card{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem;margin-bottom:1.5rem}
+    .upload-area{border:4px dashed #d1d5db;border-radius:.5rem;padding:3rem;text-align:center;cursor:pointer;transition:border-color .3s;max-width:28rem;margin:0 auto}
+    .upload-area:hover{border-color:#60a5fa}
+    .upload-icon{width:4rem;height:4rem;margin:0 auto 1rem;color:#9ca3af}
+    .upload-area h3{font-size:1.125rem;font-weight:500;color:#374151;margin-bottom:.5rem}
+    .upload-area p{font-size:.875rem;color:#6b7280}
+    .hidden{display:none!important}
+    .btn{padding:.5rem 1rem;border-radius:.5rem;font-weight:500;cursor:pointer;border:none;transition:all .3s;font-size:.875rem;display:inline-flex;align-items:center;gap:.5rem}
+    .btn-primary{background:#2563eb;color:white}
+    .btn-primary:hover:not(:disabled){background:#1d4ed8}
+    .btn-primary:disabled{background:#9ca3af;cursor:not-allowed}
+    .btn-secondary{background:#e5e7eb;color:#374151}
+    .btn-secondary:hover{background:#d1d5db}
+    .btn-success{background:#16a34a;color:white}
+    .btn-success:hover{background:#15803d}
+    .btn-warning{background:#d97706;color:white}
+    .btn-warning:hover{background:#b45309}
+    .btn-outline-warning{background:white;color:#d97706;border:2px solid #d97706}
+    .btn-outline-warning:hover{background:#fef3c7}
+    .grid{display:grid;gap:1.5rem}
+    .grid-2{grid-template-columns:1fr}
+    @media (min-width:768px){.grid-2{grid-template-columns:repeat(2,1fr)}.header h1{font-size:2.25rem}}
+    .image-container{border:2px solid #e5e7eb;border-radius:.5rem;overflow:hidden;background:#f9faff;position:relative;min-height:250px}
+    .image-container.white-bg{background:white}
+    .image-container img,.image-container canvas{width:100%;height:auto;display:block}
+    .canvas-cursor-crosshair{cursor:crosshair}
+    .placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+    .placeholder-icon{width:3rem;height:3rem;margin:0 auto .5rem;color:#d1d5db}
+    .placeholder p{font-size:.875rem;color:#9ca3af}
+    .slider-container{margin:1rem 0}
+    .slider-container label{display:block;font-size:.875rem;font-weight:500;color:#374151;margin-bottom:.5rem}
+    .slider-wrapper{display:flex;align-items:center;gap:1rem}
+    .slider{flex:1;height:.5rem;border-radius:.25rem;background:#e5e7eb;outline:none}
+    .slider::-webkit-slider-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer}
+    .slider::-moz-range-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer;border:none}
+    .slider-value{min-width:3rem;text-align:right;font-size:.875rem;color:#6b7280}
+    .eraser-panel{padding:1rem;background:#fef3c7;border-radius:.5rem;border:1px solid #fcd34d;margin:1rem 0}
+    .eraser-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap}
+    .eraser-info{display:flex;align-items:center;gap:.75rem}
+    .eraser-icon{width:2.5rem;height:2.5rem;background:white;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .eraser-circle{width:1.5rem;height:1.5rem;background:#1f2937;border-radius:50%}
+    .eraser-text h4{font-weight:500;color:#1f2937;margin-bottom:.25rem}
+    .eraser-text p{font-size:.875rem;color:#6b7280}
+    .eraser-controls{padding-top:1rem;border-top:1px solid #fcd34d}
+    .format-options{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
+    .format-option{display:flex;align-items:center;gap:.5rem;cursor:pointer}
+    .format-option input[type="radio"]{width:1rem;height:1rem;cursor:pointer}
+    .format-option label{font-size:.875rem;color:#374151;cursor:pointer}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem}
+    .section-header h3{font-weight:500;color:#374151}
+    .instructions{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem}
+    .instructions h3{font-size:1.125rem;font-weight:600;color:#1f2937;margin-bottom:1rem}
+    .instructions ol{padding-left:1.5rem;color:#6b7280;font-size:.875rem}
+    .instructions li{margin-bottom:.5rem}
+    .button-group{display:flex;gap:1rem;justify-content:center;padding-top:1rem}
+    .top-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+    .top-controls h2{font-size:1.25rem;font-weight:600;color:#1f2937}
+    /* small responsiveness for canvases inside constrained containers */
+    .image-container canvas{height:auto;max-height:70vh}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Photo to Sketch Converter</h1>
-            <p>Transform your photos into beautiful pencil sketches</p>
-        </div>
-        <div class="card">
-            <input type="file" id="fileInput" accept="image/*" class="hidden">
-            <div id="uploadArea" class="upload-area">
-                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                <h3>Upload an Image</h3>
-                <p>Click to browse or drag and drop</p>
-            </div>
-            <div id="contentArea" class="hidden">
-                <div class="top-controls">
-                    <h2>Your Images</h2>
-                    <button id="resetBtn" class="btn btn-secondary"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Reset</button>
-                </div>
-                <div class="grid grid-2">
-                    <div>
-                        <h3 style="margin-bottom:.5rem;font-weight:500;color:#374151">Original Photo</h3>
-                        <div class="image-container"><img id="originalImg" alt="Original"></div>
-                    </div>
-                    <div>
-                        <div class="section-header">
-                            <h3>Full Sketch with Shading</h3>
-                            <button id="downloadShadedBtn" class="btn btn-success hidden"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Download</button>
-                        </div>
-                        <div class="image-container">
-                            <canvas id="displayCanvas"></canvas>
-                            <div id="shadedPlaceholder" class="placeholder"><div><svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><p>Click "Convert to Sketch" to generate</p></div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-container"><label>Sketch Intensity</label><div class="slider-wrapper"><input type="range" id="intensitySlider" class="slider" min="20" max="100" value="50" disabled><span class="slider-value" id="intensityValue">50%</span></div></div>
-                <div id="eraserPanel" class="eraser-panel hidden">
-                    <div class="eraser-header">
-                        <div class="eraser-info"><div class="eraser-icon"><div class="eraser-circle"></div></div><div class="eraser-text"><h4>Eraser Tool</h4><p>Remove unwanted parts</p></div></div>
-                        <button id="eraserToggleBtn" class="btn btn-outline-warning">Enable</button>
-                    </div>
-                    <div id="eraserControls" class="eraser-controls hidden">
-                        <div class="slider-container"><label>Eraser Size: <span id="eraserSizeValue">20</span>px</label><input type="range" id="eraserSizeSlider" class="slider" min="5" max="50" value="20"></div>
-                        <button id="undoEraserBtn" class="btn btn-secondary" style="width:100%;margin-top:.5rem">Undo All Erasing</button>
-                        <p style="font-size:.75rem;color:#6b7280;margin-top:.5rem">Tap and drag on either sketch to erase parts</p>
-                    </div>
-                </div>
-                <div class="slider-container"><label>Download Format</label><div class="format-options"><div class="format-option"><input type="radio" id="formatJpeg" name="format" value="jpeg" checked><label for="formatJpeg">JPEG (smaller file)</label></div><div class="format-option"><input type="radio" id="formatPng" name="format" value="png"><label for="formatPng">PNG (higher quality)</label></div></div></div>
-                <div id="outlineSection" class="hidden" style="margin-top:1.5rem">
-                    <div class="section-header"><h3>Outline Sketch (No Shading)</h3><button id="downloadOutlineBtn" class="btn btn-success hidden"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>Download</button></div>
-                    <div class="image-container white-bg"><canvas id="outlineDisplayCanvas"></canvas><div id="outlinePlaceholder" class="placeholder"><div><svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><p>Generating outline version...</p></div></div></div>
-                </div>
-                <div class="button-group"><button id="convertBtn" class="btn btn-primary" style="padding:.75rem 1.5rem;font-size:1rem">Convert to Sketch</button></div>
-            </div>
-        </div>
-        <canvas id="processCanvas" class="hidden"></canvas>
-        <canvas id="outlineCanvas" class="hidden"></canvas>
-        <div class="instructions"><h3>How to Use</h3><ol><li>Upload any photo of a room, city, landscape, or portrait</li><li>Click "Convert to Sketch" to transform it into two versions</li><li>View the full sketch with shading at the top</li><li>Adjust the intensity slider to control the sketch detail level for both versions</li><li>Enable the eraser tool to remove unwanted portions from either sketch</li><li>View the outline-only version (no shading) at the bottom</li><li>Click the Download button on each sketch to save that version separately</li></ol></div>
+  <div class="container">
+    <div class="header">
+      <h1>Photo to Sketch Converter</h1>
+      <p>Transform your photos into beautiful pencil sketches</p>
     </div>
-    <script>
-let o=null,s=!1,e=!1,d=!1,a=null;const i=document.getElementById("fileInput"),l=document.getElementById("uploadArea"),n=document.getElementById("contentArea"),r=document.getElementById("originalImg"),c=document.getElementById("displayCanvas"),t=document.getElementById("outlineDisplayCanvas"),g=document.getElementById("processCanvas"),m=document.getElementById("outlineCanvas"),p=document.getElementById("convertBtn"),u=document.getElementById("resetBtn"),h=document.getElementById("intensitySlider"),v=document.getElementById("intensityValue"),y=document.getElementById("downloadShadedBtn"),f=document.getElementById("downloadOutlineBtn"),w=document.getElementById("eraserToggleBtn"),b=document.getElementById("eraserPanel"),C=document.getElementById("eraserControls"),k=document.getElementById("eraserSizeSlider"),E=document.getElementById("eraserSizeValue"),I=document.getElementById("undoEraserBtn"),x=document.getElementById("shadedPlaceholder"),S=document.getElementById("outlinePlaceholder"),T=document.getElementById("outlineSection");function D(e,d){const a=new FileReader;a.onload=e=>{o=e.target.result,r.src=o,l.classList.add("hidden"),n.classList.remove("hidden"),s=!1},a.readAsDataURL(e)}function M(){o=null,s=!1,e=!1,i.value="",l.classList.remove("hidden"),n.classList.add("hidden"),p.classList.remove("hidden"),y.classList.add("hidden"),f.classList.add("hidden"),b.classList.add("hidden"),T.classList.add("hidden"),h.disabled=!0,h.value=50,v.textContent="50%"}function L(){if(!o)return;p.disabled=!0,p.textContent="Processing...";const e=new Image;e.onload=()=>{const d=g.getContext("2d");g.width=e.width,g.height=e.height,d.drawImage(e,0,0);const a=d.getImageData(0,0,g.width,g.height),i=a.data;for(let e=0;e<i.length;e+=4){const d=.299*i[e]+.587*i[e+1]+.114*i[e+2];i[e]=d,i[e+1]=d,i[e+2]=d}d.putImageData(a,0,0);const l=d.getImageData(0,0,g.width,g.height),n=d.createImageData(g.width,g.height),r=[[-1,0,1],[-2,0,2],[-1,0,1]],o=[[-1,-2,-1],[0,0,0],[1,2,1]],c=parseInt(h.value)/50;for(let e=1;e<g.height-1;e++)for(let d=1;d<g.width-1;d++){let a=0,i=0;for(let s=-1;s<=1;s++)for(let t=-1;t<=1;t++){const u=4*((e+s)*g.width+(d+t)),h=l.data[u];a+=h*r[s+1][t+1],i+=h*o[s+1][t+1]}const t=Math.sqrt(a*a+i*i),m=255-Math.min(255,t*c),p=4*(e*g.width+d);n.data[p]=m,n.data[p+1]=m,n.data[p+2]=m,n.data[p+3]=255}d.putImageData(n,0,0),c.width=g.width,c.height=g.height;const t=c.getContext("2d");t.drawImage(g,0,0),function(){const e=m.getContext("2d");m.width=g.width,m.height=g.height;const d=g.getContext("2d").getImageData(0,0,g.width,g.height),a=e.createImageData(m.width,m.height);for(let e=0;e<d.data.length;e+=4)d.data[e]<180?(a.data[e]=0,a.data[e+1]=0,a.data[e+2]=0,a.data[e+3]=255):(a.data[e]=255,a.data[e+1]=255,a.data[e+2]=255,a.data[e+3]=255);e.putImageData(a,0,0),t.width=m.width,t.height=m.height;const i=t.getContext("2d");i.drawImage(m,0,0),S.classList.add("hidden"),f.classList.remove("hidden")}(),x.classList.add("hidden"),p.classList.add("hidden"),y.classList.remove("hidden"),b.classList.remove("hidden"),T.classList.remove("hidden"),h.disabled=!1,s=!0,p.disabled=!1,p.textContent="Convert to Sketch"},e.src=o}function A(e,d){if(!e)return;const a="outline"===d?t:c,i=a.getContext("2d"),l=a.getBoundingClientRect(),n=a.width/l.width,r=a.height/l.height,o=(e.clientX||e.touches?.[0]?.clientX-l.left)*n,s=(e.clientY||e.touches?.[0]?.clientY-l.top)*r;i.save(),i.globalCompositeOperation="destination-out",i.fillStyle="rgba(0,0,0,1)",i.beginPath(),i.arc(o,s,parseInt(k.value)*n,0,2*Math.PI),i.fill(),i.restore()}function B(i){const l="outline"===i?t:c,n=document.querySelector('input[name="format"]:checked').value,r=document.createElement("canvas");r.width=l.width,r.height=l.height;const o=r.getContext("2d");"jpeg"===n&&(o.fillStyle="white",o.fillRect(0,0,r.width,r.height)),o.drawImage(l,0,0);const s="jpeg"===n?"image/jpeg":"image/png",e="jpeg"===n?"jpg":"png",d=r.toDataURL(s,"jpeg"===n?.95:1),a=document.createElement("a");a.download=`sketch-${"shaded"===i?"shaded":"outline"}.${e}`,a.href=d,document.body.appendChild(a),a.click(),document.body.removeChild(a)}l.addEventListener("click",()=>i.click()),i.addEventListener("change",e=>{const d=e.target.files[0];d&&d.type.startsWith("image/")&&D(d)}),u.addEventListener("click",M),p.addEventListener("click",L),h.addEventListener("input",e=>{v.textContent=e.target.value+"%",s&&L()}),w.addEventListener("click",()=>{(e=!e)?(w.textContent="Enabled",w.classList.remove("btn-outline-warning"),w.classList.add("btn-warning"),C.classList.remove("hidden"),c.classList.add("canvas-cursor-crosshair"),t.classList.add("canvas-cursor-crosshair")):(w.textContent="Enable",w.classList.remove("btn-warning"),w.classList.add("btn-outline-warning"),C.classList.add("hidden"),c.classList.remove("canvas-cursor-crosshair"),t.classList.remove("canvas-cursor-crosshair"))}),k.addEventListener("input",e=>{E.textContent=e.target.value}),I.addEventListener("click",()=>{const e=c.getContext("2d");e.clearRect(0,0,c.width,c.height),e.drawImage(g,0,0);const d=t.getContext("2d");d.clearRect(0,0,t.width,t.height),d.drawImage(m,0,0)}),y.addEventListener("click",()=>B("shaded")),f.addEventListener("click",()=>B("outline")),c.addEventListener("mousedown",i=>{e&&(a="shaded",d=!0,A(i,"shaded"))}),c.addEventListener("mousemove",i=>{e&&d&&"shaded"===a&&A(i,"shaded")}),c.addEventListener("mouseup",()=>{d=!1,a=null}),c.addEventListener("mouseleave",()=>{d=!1,a=null}),c.addEventListener("touchstart",i=>{e&&(i.preventDefault(),a="shaded",d=!0,A(i.touches[0],"shaded"))}),c.addEventListener("touchmove",i=>{e&&d&&"shaded"===a&&(i.preventDefault(),A(i.touches[0],"shaded"))}),c.addEventListener("touchend",e=>{e.preventDefault(),d=!1,a=null}),t.addEventListener("mousedown",i=>{e&&(a="outline",d=!0,A(i,"outline"))}),t.addEventListener("mousemove",i=>{e&&d&&"outline"===a&&A(i,"outline")}),t.addEventListener("mouseup",()=>{d=!1,a=null}),t.addEventListener("mouseleave",()=>{d=!1,a=null}),t.addEventListener("touchstart",i=>{e&&(i.preventDefault(),a="outline",d=!0,A(i.touches[0],"outline"))}),t.addEventListener("touchmove",i=>{e&&d&&"outline"===a&&(i.preventDefault(),A(i.touches[0],"outline"))}),t.addEventListener("touchend",e=>{e.preventDefault(),d=!1,a=null});
-    </script>
+
+    <div class="card">
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+      <div id="uploadArea" class="upload-area" role="button" tabindex="0" title="Click or drop an image">
+        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="64" height="64" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+        </svg>
+        <h3>Upload an Image</h3>
+        <p>Click to browse or drag and drop</p>
+      </div>
+
+      <div id="contentArea" class="hidden">
+        <div class="top-controls">
+          <h2>Your Images</h2>
+          <button id="resetBtn" class="btn btn-secondary" title="Reset all">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            Reset
+          </button>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <h3 style="margin-bottom:.5rem;font-weight:500;color:#374151">Original Photo</h3>
+            <div class="image-container"><img id="originalImg" alt="Original photo preview"></div>
+          </div>
+
+          <div>
+            <div class="section-header">
+              <h3>Full Sketch with Shading</h3>
+              <button id="downloadShadedBtn" class="btn btn-success hidden" title="Download shaded version">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Download
+              </button>
+            </div>
+
+            <div class="image-container">
+              <canvas id="displayCanvas" aria-label="Shaded sketch canvas"></canvas>
+              <div id="shadedPlaceholder" class="placeholder">
+                <div>
+                  <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <p>Click "Convert to Sketch" to generate</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <label>Sketch Intensity</label>
+          <div class="slider-wrapper">
+            <input type="range" id="intensitySlider" class="slider" min="20" max="100" value="50" disabled>
+            <span class="slider-value" id="intensityValue">50%</span>
+          </div>
+        </div>
+
+        <div id="eraserPanel" class="eraser-panel hidden">
+          <div class="eraser-header">
+            <div class="eraser-info">
+              <div class="eraser-icon"><div class="eraser-circle"></div></div>
+              <div class="eraser-text"><h4>Eraser Tool</h4><p>Remove unwanted parts</p></div>
+            </div>
+            <button id="eraserToggleBtn" class="btn btn-outline-warning">Enable</button>
+          </div>
+
+          <div id="eraserControls" class="eraser-controls hidden">
+            <div class="slider-container">
+              <label>Eraser Size: <span id="eraserSizeValue">20</span>px</label>
+              <input type="range" id="eraserSizeSlider" class="slider" min="5" max="50" value="20">
+            </div>
+            <button id="undoEraserBtn" class="btn btn-secondary" style="width:100%;margin-top:.5rem">Undo All Erasing</button>
+            <p style="font-size:.75rem;color:#6b7280;margin-top:.5rem">Tap and drag on either sketch to erase parts</p>
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <label>Download Format</label>
+          <div class="format-options">
+            <div class="format-option"><input type="radio" id="formatJpeg" name="format" value="jpeg" checked><label for="formatJpeg">JPEG (smaller file)</label></div>
+            <div class="format-option"><input type="radio" id="formatPng" name="format" value="png"><label for="formatPng">PNG (higher quality)</label></div>
+          </div>
+        </div>
+
+        <div id="outlineSection" class="hidden" style="margin-top:1.5rem">
+          <div class="section-header">
+            <h3>Outline Sketch (No Shading)</h3>
+            <button id="downloadOutlineBtn" class="btn btn-success hidden" title="Download outline version">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download
+            </button>
+          </div>
+
+          <div class="image-container white-bg">
+            <canvas id="outlineDisplayCanvas" aria-label="Outline sketch canvas"></canvas>
+            <div id="outlinePlaceholder" class="placeholder">
+              <div>
+                <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p>Generating outline version...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button id="convertBtn" class="btn btn-primary" style="padding:.75rem 1.5rem;font-size:1rem">Convert to Sketch</button>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="processCanvas" class="hidden"></canvas>
+    <canvas id="outlineCanvas" class="hidden"></canvas>
+
+    <div class="instructions">
+      <h3>How to Use</h3>
+      <ol>
+        <li>Upload any photo of a room, city, landscape, or portrait</li>
+        <li>Click "Convert to Sketch" to transform it into two versions</li>
+        <li>View the full sketch with shading at the top</li>
+        <li>Adjust the intensity slider to control the sketch detail level for both versions</li>
+        <li>Enable the eraser tool to remove unwanted portions from either sketch</li>
+        <li>View the outline-only version (no shading) at the bottom</li>
+        <li>Click the Download button on each sketch to save that version separately</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    /* Main variables */
+    let uploadedDataUrl = null;
+    let isProcessed = false;
+    let eraserEnabled = false;
+    let isErasing = false;
+    let eraserTarget = null;
+
+    const fileInput = document.getElementById("fileInput");
+    const uploadArea = document.getElementById("uploadArea");
+    const contentArea = document.getElementById("contentArea");
+    const originalImg = document.getElementById("originalImg");
+    const displayCanvas = document.getElementById("displayCanvas");
+    const outlineDisplayCanvas = document.getElementById("outlineDisplayCanvas");
+    const processCanvas = document.getElementById("processCanvas");
+    const outlineCanvas = document.getElementById("outlineCanvas");
+    const convertBtn = document.getElementById("convertBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const intensitySlider = document.getElementById("intensitySlider");
+    const intensityValue = document.getElementById("intensityValue");
+    const downloadShadedBtn = document.getElementById("downloadShadedBtn");
+    const downloadOutlineBtn = document.getElementById("downloadOutlineBtn");
+    const eraserToggleBtn = document.getElementById("eraserToggleBtn");
+    const eraserPanel = document.getElementById("eraserPanel");
+    const eraserControls = document.getElementById("eraserControls");
+    const eraserSizeSlider = document.getElementById("eraserSizeSlider");
+    const eraserSizeValue = document.getElementById("eraserSizeValue");
+    const undoEraserBtn = document.getElementById("undoEraserBtn");
+    const shadedPlaceholder = document.getElementById("shadedPlaceholder");
+    const outlinePlaceholder = document.getElementById("outlinePlaceholder");
+    const outlineSection = document.getElementById("outlineSection");
+
+    /* File reading & UI toggles */
+    function readFileAndShow(file) {
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        uploadedDataUrl = evt.target.result;
+        originalImg.src = uploadedDataUrl;
+        uploadArea.classList.add("hidden");
+        contentArea.classList.remove("hidden");
+        isProcessed = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetAll() {
+      uploadedDataUrl = null;
+      isProcessed = false;
+      eraserEnabled = false;
+      isErasing = false;
+      eraserTarget = null;
+
+      fileInput.value = "";
+      uploadArea.classList.remove("hidden");
+      contentArea.classList.add("hidden");
+      convertBtn.classList.remove("hidden");
+      downloadShadedBtn.classList.add("hidden");
+      downloadOutlineBtn.classList.add("hidden");
+      eraserPanel.classList.add("hidden");
+      outlineSection.classList.add("hidden");
+      intensitySlider.disabled = true;
+      intensitySlider.value = 50;
+      intensityValue.textContent = "50%";
+      eraserControls.classList.add("hidden");
+      eraserToggleBtn.classList.remove("btn-warning");
+      eraserToggleBtn.classList.add("btn-outline-warning");
+      eraserToggleBtn.textContent = "Enable";
+
+      // clear canvases
+      [displayCanvas, outlineDisplayCanvas, processCanvas, outlineCanvas].forEach(c => {
+        const ctx = c.getContext && c.getContext("2d");
+        if (ctx) { ctx.clearRect(0,0,c.width || 0, c.height || 0); }
+      });
+    }
+
+    /* Drag & drop handlers */
+    uploadArea.addEventListener("click", () => fileInput.click());
+    uploadArea.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") fileInput.click(); });
+    uploadArea.addEventListener("dragover", (e) => { e.preventDefault(); uploadArea.style.borderColor = "#60a5fa"; });
+    uploadArea.addEventListener("dragleave", () => { uploadArea.style.borderColor = ""; });
+    uploadArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = "";
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) readFileAndShow(f);
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      readFileAndShow(file);
+    });
+
+    resetBtn.addEventListener("click", resetAll);
+
+    /* Core image -> sketch processing */
+    function generateSketches() {
+      if (!uploadedDataUrl) return;
+      convertBtn.disabled = true;
+      convertBtn.textContent = "Processing...";
+
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        // prepare process canvas at image's natural size
+        const pCtx = processCanvas.getContext("2d");
+        processCanvas.width = img.naturalWidth;
+        processCanvas.height = img.naturalHeight;
+        pCtx.drawImage(img, 0, 0);
+
+        // convert to grayscale
+        const imgData = pCtx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const gs = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+          data[i] = data[i + 1] = data[i + 2] = gs;
+        }
+        pCtx.putImageData(imgData, 0, 0);
+
+        // Sobel-like edge detection to produce 'sketch' lines
+        const source = pCtx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+        const out = pCtx.createImageData(processCanvas.width, processCanvas.height);
+        const gx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+        const gy = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
+        const intensityFactor = parseInt(intensitySlider.value, 10) / 50;
+
+        for (let y = 1; y < processCanvas.height - 1; y++) {
+          for (let x = 1; x < processCanvas.width - 1; x++) {
+            let sumX = 0, sumY = 0;
+            for (let j = -1; j <= 1; j++) {
+              for (let i = -1; i <= 1; i++) {
+                const idx = 4 * ((y + j) * processCanvas.width + (x + i));
+                const val = source.data[idx]; // grayscale
+                sumX += val * gx[j + 1][i + 1];
+                sumY += val * gy[j + 1][i + 1];
+              }
+            }
+            const mag = Math.sqrt(sumX * sumX + sumY * sumY);
+            const pixel = 255 - Math.min(255, mag * intensityFactor);
+            const outIdx = 4 * (y * processCanvas.width + x);
+            out.data[outIdx] = out.data[outIdx + 1] = out.data[outIdx + 2] = pixel;
+            out.data[outIdx + 3] = 255;
+          }
+        }
+
+        pCtx.putImageData(out, 0, 0);
+
+        // draw shaded sketch to visible canvas
+        displayCanvas.width = processCanvas.width;
+        displayCanvas.height = processCanvas.height;
+        const dispCtx = displayCanvas.getContext("2d");
+        dispCtx.drawImage(processCanvas, 0, 0);
+
+        // create outline-only canvas (threshold)
+        const oCtx = outlineCanvas.getContext("2d");
+        outlineCanvas.width = processCanvas.width;
+        outlineCanvas.height = processCanvas.height;
+        const sourceData = pCtx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+        const outlineImg = oCtx.createImageData(outlineCanvas.width, outlineCanvas.height);
+        for (let i = 0; i < sourceData.data.length; i += 4) {
+          // threshold to produce black/white outline
+          const v = sourceData.data[i] < 180 ? 0 : 255;
+          outlineImg.data[i] = outlineImg.data[i + 1] = outlineImg.data[i + 2] = v;
+          outlineImg.data[i + 3] = 255;
+        }
+        oCtx.putImageData(outlineImg, 0, 0);
+
+        // copy outlineCanvas to visible outlineDisplayCanvas
+        outlineDisplayCanvas.width = outlineCanvas.width;
+        outlineDisplayCanvas.height = outlineCanvas.height;
+        outlineDisplayCanvas.getContext("2d").drawImage(outlineCanvas, 0, 0);
+
+        // hide placeholders & show buttons/panels
+        shadedPlaceholder.classList.add("hidden");
+        outlinePlaceholder.classList.add("hidden");
+        downloadShadedBtn.classList.remove("hidden");
+        downloadOutlineBtn.classList.remove("hidden");
+        eraserPanel.classList.remove("hidden");
+        outlineSection.classList.remove("hidden");
+        intensitySlider.disabled = false;
+        isProcessed = true;
+        convertBtn.disabled = false;
+        convertBtn.textContent = "Convert to Sketch";
+      };
+
+      img.onerror = () => {
+        convertBtn.disabled = false;
+        convertBtn.textContent = "Convert to Sketch";
+        alert("Couldn't load the image. Try another file.");
+      };
+
+      img.src = uploadedDataUrl;
+    }
+
+    convertBtn.addEventListener("click", () => {
+      if (!uploadedDataUrl) { alert("Please upload an image first."); return; }
+      generateSketches();
+    });
+
+    intensitySlider.addEventListener("input", (e) => {
+      intensityValue.textContent = e.target.value + "%";
+      if (isProcessed) generateSketches();
+    });
+
+    /* Eraser (paint-away using destination-out) */
+    function getPointerPositionOnCanvas(canvas, evt) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (evt.clientX || (evt.touches && evt.touches[0].clientX)) - rect.left;
+      const y = (evt.clientY || (evt.touches && evt.touches[0].clientY)) - rect.top;
+      // scale for canvas coordinate space
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return { x: x * scaleX, y: y * scaleY };
+    }
+
+    function eraseAtPosition(canvasElem, evt) {
+      const ctx = canvasElem.getContext("2d");
+      const pos = getPointerPositionOnCanvas(canvasElem, evt);
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, parseInt(eraserSizeSlider.value, 10), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    eraserToggleBtn.addEventListener("click", () => {
+      eraserEnabled = !eraserEnabled;
+      if (eraserEnabled) {
+        eraserToggleBtn.textContent = "Enabled";
+        eraserToggleBtn.classList.remove("btn-outline-warning");
+        eraserToggleBtn.classList.add("btn-warning");
+        eraserControls.classList.remove("hidden");
+        displayCanvas.classList.add("canvas-cursor-crosshair");
+        outlineDisplayCanvas.classList.add("canvas-cursor-crosshair");
+      } else {
+        eraserToggleBtn.textContent = "Enable";
+        eraserToggleBtn.classList.remove("btn-warning");
+        eraserToggleBtn.classList.add("btn-outline-warning");
+        eraserControls.classList.add("hidden");
+        displayCanvas.classList.remove("canvas-cursor-crosshair");
+        outlineDisplayCanvas.classList.remove("canvas-cursor-crosshair");
+      }
+    });
+
+    eraserSizeSlider.addEventListener("input", (e) => {
+      eraserSizeValue.textContent = e.target.value;
+    });
+
+    function attachEraserEvents(canvasElem, type) {
+      canvasElem.addEventListener("mousedown", (ev) => { if (!eraserEnabled) return; isErasing = true; eraserTarget = type; eraseAtPosition(canvasElem, ev); });
+      canvasElem.addEventListener("mousemove", (ev) => { if (!eraserEnabled || !isErasing) return; eraseAtPosition(canvasElem, ev); });
+      window.addEventListener("mouseup", () => { isErasing = false; eraserTarget = null; });
+
+      // touch
+      canvasElem.addEventListener("touchstart", (ev) => { if (!eraserEnabled) return; ev.preventDefault(); isErasing = true; eraserTarget = type; eraseAtPosition(canvasElem, ev.touches[0]); });
+      canvasElem.addEventListener("touchmove", (ev) => { if (!eraserEnabled || !isErasing) return; ev.preventDefault(); eraseAtPosition(canvasElem, ev.touches[0]); });
+      window.addEventListener("touchend", () => { isErasing = false; eraserTarget = null; });
+    }
+
+    attachEraserEvents(displayCanvas, "shaded");
+    attachEraserEvents(outlineDisplayCanvas, "outline");
+
+    undoEraserBtn.addEventListener("click", () => {
+      // redraw originals from processCanvas/outlineCanvas
+      if (processCanvas.width) displayCanvas.getContext("2d").drawImage(processCanvas, 0, 0);
+      if (outlineCanvas.width) outlineDisplayCanvas.getContext("2d").drawImage(outlineCanvas, 0, 0);
+    });
+
+    /* Download */
+    function downloadCanvas(type) {
+      const chosenCanvas = type === "shaded" ? displayCanvas : outlineDisplayCanvas;
+      if (!chosenCanvas || !chosenCanvas.width) return;
+      const format = document.querySelector('input[name="format"]:checked').value;
+      const tmp = document.createElement("canvas");
+      tmp.width = chosenCanvas.width;
+      tmp.height = chosenCanvas.height;
+      const tctx = tmp.getContext("2d");
+      if (format === "jpeg") {
+        // JPEG needs opaque background, fill white first
+        tctx.fillStyle = "#ffffff";
+        tctx.fillRect(0, 0, tmp.width, tmp.height);
+      }
+      tctx.drawImage(chosenCanvas, 0, 0);
+      const mime = format === "jpeg" ? "image/jpeg" : "image/png";
+      const ext = format === "jpeg" ? "jpg" : "png";
+      const dataUrl = tmp.toDataURL(mime, format === "jpeg" ? 0.95 : 1);
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `sketch-${type}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    downloadShadedBtn.addEventListener("click", () => downloadCanvas("shaded"));
+    downloadOutlineBtn.addEventListener("click", () => downloadCanvas("outline"));
+
+    /* Prevent pinch/scroll from interfering with canvas touch on mobile */
+    [displayCanvas, outlineDisplayCanvas].forEach(c => {
+      c.addEventListener("touchstart", (e) => { if (eraserEnabled) e.preventDefault(); }, {passive:false});
+    });
+  </script>
 </body>
 </html>
