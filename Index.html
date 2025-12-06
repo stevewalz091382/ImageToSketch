@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo to Sketch Converter</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(to bottom right,#f9fafb,#e5e7eb);min-height:100vh;padding:1rem}.container{max-width:1200px;margin:0 auto}.header{text-align:center;margin-bottom:2rem}.header h1{font-size:2rem;font-weight:bold;color:#1f2937;margin-bottom:.5rem}.header p{color:#6b7280}.card{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem;margin-bottom:1.5rem}.upload-area{border:4px dashed #d1d5db;border-radius:.5rem;padding:3rem;text-align:center;cursor:pointer;transition:border-color .3s;max-width:28rem;margin:0 auto}.upload-area:hover{border-color:#60a5fa}.upload-icon{width:4rem;height:4rem;margin:0 auto 1rem;color:#9ca3af}.upload-area h3{font-size:1.125rem;font-weight:500;color:#374151;margin-bottom:.5rem}.upload-area p{font-size:.875rem;color:#6b7280}.hidden{display:none!important}.btn{padding:.5rem 1rem;border-radius:.5rem;font-weight:500;cursor:pointer;border:none;transition:all .3s;font-size:.875rem;display:inline-flex;align-items:center;gap:.5rem}.btn-primary{background:#2563eb;color:white}.btn-primary:hover:not(:disabled){background:#1d4ed8}.btn-primary:disabled{background:#9ca3af;cursor:not-allowed}.btn-secondary{background:#e5e7eb;color:#374151}.btn-secondary:hover{background:#d1d5db}.btn-success{background:#16a34a;color:white}.btn-success:hover{background:#15803d}.btn-warning{background:#d97706;color:white}.btn-warning:hover{background:#b45309}.btn-outline-warning{background:white;color:#d97706;border:2px solid #d97706}.btn-outline-warning:hover{background:#fef3c7}.grid{display:grid;gap:1.5rem}.grid-2{grid-template-columns:1fr}@media (min-width:768px){.grid-2{grid-template-columns:repeat(2,1fr)}.header h1{font-size:2.25rem}}.image-container{border:2px solid #e5e7eb;border-radius:.5rem;overflow:hidden;background:#f9fafb;position:relative;min-height:250px}.image-container.white-bg{background:white}.image-container img,.image-container canvas{width:100%;height:auto;display:block}.canvas-cursor-crosshair{cursor:crosshair}.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}.placeholder-icon{width:3rem;height:3rem;margin:0 auto .5rem;color:#d1d5db}.placeholder p{font-size:.875rem;color:#9ca3af}.slider-container{margin:1rem 0}.slider-container label{display:block;font-size:.875rem;font-weight:500;color:#374151;margin-bottom:.5rem}.slider-wrapper{display:flex;align-items:center;gap:1rem}.slider{flex:1;height:.5rem;border-radius:.25rem;background:#e5e7eb;outline:none}.slider::-webkit-slider-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer}.slider::-moz-range-thumb{width:1.25rem;height:1.25rem;border-radius:50%;background:#2563eb;cursor:pointer;border:none}.slider-value{min-width:3rem;text-align:right;font-size:.875rem;color:#6b7280}.eraser-panel{padding:1rem;background:#fef3c7;border-radius:.5rem;border:1px solid #fcd34d;margin:1rem 0}.eraser-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap}.eraser-info{display:flex;align-items:center;gap:.75rem}.eraser-icon{width:2.5rem;height:2.5rem;background:white;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}.eraser-circle{width:1.5rem;height:1.5rem;background:#1f2937;border-radius:50%}.eraser-text h4{font-weight:500;color:#1f2937;margin-bottom:.25rem}.eraser-text p{font-size:.875rem;color:#6b7280}.eraser-controls{padding-top:1rem;border-top:1px solid #fcd34d}.format-options{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem}.format-option{display:flex;align-items:center;gap:.5rem;cursor:pointer}.format-option input[type="radio"]{width:1rem;height:1rem;cursor:pointer}.format-option label{font-size:.875rem;color:#374151;cursor:pointer}.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem}.section-header h3{font-weight:500;color:#374151}.instructions{background:white;border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:1.5rem}.instructions h3{font-size:1.125rem;font-weight:600;color:#1f2937;margin-bottom:1rem}.instructions ol{padding-left:1.5rem;color:#6b7280;font-size:.875rem}.instructions li{margin-bottom:.5rem}.button-group{display:flex;gap:1rem;justify-content:center;padding-top:1rem}.top-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}.top-controls h2{font-size:1.25rem;font-weight:600;color:#1f2937}
+    </style>
 </head>
 <body>
     <div class="container">
@@ -64,6 +66,341 @@
         <canvas id="outlineCanvas" class="hidden"></canvas>
         <div class="instructions"><h3>How to Use</h3><ol><li>Upload any photo of a room, city, landscape, or portrait</li><li>Click "Convert to Sketch" to transform it into two versions</li><li>View the full sketch with shading at the top</li><li>Adjust the intensity slider to control the sketch detail level for both versions</li><li>Enable the eraser tool to remove unwanted portions from either sketch</li><li>View the outline-only version (no shading) at the bottom</li><li>Click the Download button on each sketch to save that version separately</li></ol></div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        let originalImage = null;
+        let sketchGenerated = false;
+        let eraserMode = false;
+        let isDrawing = false;
+        let activeCanvas = null;
+
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const contentArea = document.getElementById('contentArea');
+        const originalImg = document.getElementById('originalImg');
+        const displayCanvas = document.getElementById('displayCanvas');
+        const outlineDisplayCanvas = document.getElementById('outlineDisplayCanvas');
+        const processCanvas = document.getElementById('processCanvas');
+        const outlineCanvas = document.getElementById('outlineCanvas');
+        const convertBtn = document.getElementById('convertBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const intensitySlider = document.getElementById('intensitySlider');
+        const intensityValue = document.getElementById('intensityValue');
+        const downloadShadedBtn = document.getElementById('downloadShadedBtn');
+        const downloadOutlineBtn = document.getElementById('downloadOutlineBtn');
+        const eraserToggleBtn = document.getElementById('eraserToggleBtn');
+        const eraserPanel = document.getElementById('eraserPanel');
+        const eraserControls = document.getElementById('eraserControls');
+        const eraserSizeSlider = document.getElementById('eraserSizeSlider');
+        const eraserSizeValue = document.getElementById('eraserSizeValue');
+        const undoEraserBtn = document.getElementById('undoEraserBtn');
+        const shadedPlaceholder = document.getElementById('shadedPlaceholder');
+        const outlinePlaceholder = document.getElementById('outlinePlaceholder');
+        const outlineSection = document.getElementById('outlineSection');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    originalImage = event.target.result;
+                    originalImg.src = originalImage;
+                    uploadArea.classList.add('hidden');
+                    contentArea.classList.remove('hidden');
+                    sketchGenerated = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            originalImage = null;
+            sketchGenerated = false;
+            eraserMode = false;
+            fileInput.value = '';
+            uploadArea.classList.remove('hidden');
+            contentArea.classList.add('hidden');
+            convertBtn.classList.remove('hidden');
+            downloadShadedBtn.classList.add('hidden');
+            downloadOutlineBtn.classList.add('hidden');
+            eraserPanel.classList.add('hidden');
+            outlineSection.classList.add('hidden');
+            intensitySlider.disabled = true;
+            intensitySlider.value = 50;
+            intensityValue.textContent = '50%';
+        });
+
+        convertBtn.addEventListener('click', convertToSketch);
+
+        intensitySlider.addEventListener('input', (e) => {
+            intensityValue.textContent = e.target.value + '%';
+            if (sketchGenerated) {
+                convertToSketch();
+            }
+        });
+
+        eraserToggleBtn.addEventListener('click', () => {
+            eraserMode = !eraserMode;
+            if (eraserMode) {
+                eraserToggleBtn.textContent = 'Enabled';
+                eraserToggleBtn.classList.remove('btn-outline-warning');
+                eraserToggleBtn.classList.add('btn-warning');
+                eraserControls.classList.remove('hidden');
+                displayCanvas.classList.add('canvas-cursor-crosshair');
+                outlineDisplayCanvas.classList.add('canvas-cursor-crosshair');
+            } else {
+                eraserToggleBtn.textContent = 'Enable';
+                eraserToggleBtn.classList.remove('btn-warning');
+                eraserToggleBtn.classList.add('btn-outline-warning');
+                eraserControls.classList.add('hidden');
+                displayCanvas.classList.remove('canvas-cursor-crosshair');
+                outlineDisplayCanvas.classList.remove('canvas-cursor-crosshair');
+            }
+        });
+
+        eraserSizeSlider.addEventListener('input', (e) => {
+            eraserSizeValue.textContent = e.target.value;
+        });
+
+        undoEraserBtn.addEventListener('click', () => {
+            const displayCtx = displayCanvas.getContext('2d');
+            displayCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+            displayCtx.drawImage(processCanvas, 0, 0);
+
+            const outlineDisplayCtx = outlineDisplayCanvas.getContext('2d');
+            outlineDisplayCtx.clearRect(0, 0, outlineDisplayCanvas.width, outlineDisplayCanvas.height);
+            outlineDisplayCtx.drawImage(outlineCanvas, 0, 0);
+        });
+
+        downloadShadedBtn.addEventListener('click', () => downloadImage('shaded'));
+        downloadOutlineBtn.addEventListener('click', () => downloadImage('outline'));
+
+        displayCanvas.addEventListener('mousedown', (e) => handleCanvasMouseDown(e, 'shaded'));
+        displayCanvas.addEventListener('mousemove', (e) => handleCanvasMouseMove(e, 'shaded'));
+        displayCanvas.addEventListener('mouseup', handleCanvasMouseUp);
+        displayCanvas.addEventListener('mouseleave', handleCanvasMouseUp);
+        displayCanvas.addEventListener('touchstart', (e) => handleCanvasTouchStart(e, 'shaded'));
+        displayCanvas.addEventListener('touchmove', (e) => handleCanvasTouchMove(e, 'shaded'));
+        displayCanvas.addEventListener('touchend', handleCanvasTouchEnd);
+
+        outlineDisplayCanvas.addEventListener('mousedown', (e) => handleCanvasMouseDown(e, 'outline'));
+        outlineDisplayCanvas.addEventListener('mousemove', (e) => handleCanvasMouseMove(e, 'outline'));
+        outlineDisplayCanvas.addEventListener('mouseup', handleCanvasMouseUp);
+        outlineDisplayCanvas.addEventListener('mouseleave', handleCanvasMouseUp);
+        outlineDisplayCanvas.addEventListener('touchstart', (e) => handleCanvasTouchStart(e, 'outline'));
+        outlineDisplayCanvas.addEventListener('touchmove', (e) => handleCanvasTouchMove(e, 'outline'));
+        outlineDisplayCanvas.addEventListener('touchend', handleCanvasTouchEnd);
+
+        function handleCanvasMouseDown(e, canvasType) {
+            if (!eraserMode) return;
+            activeCanvas = canvasType;
+            isDrawing = true;
+            erase(e, canvasType);
+        }
+
+        function handleCanvasMouseMove(e, canvasType) {
+            if (!eraserMode || !isDrawing || activeCanvas !== canvasType) return;
+            erase(e, canvasType);
+        }
+
+        function handleCanvasMouseUp() {
+            isDrawing = false;
+            activeCanvas = null;
+        }
+
+        function handleCanvasTouchStart(e, canvasType) {
+            if (!eraserMode) return;
+            e.preventDefault();
+            activeCanvas = canvasType;
+            isDrawing = true;
+            const touch = e.touches[0];
+            erase(touch, canvasType);
+        }
+
+        function handleCanvasTouchMove(e, canvasType) {
+            if (!eraserMode || !isDrawing || activeCanvas !== canvasType) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            erase(touch, canvasType);
+        }
+
+        function handleCanvasTouchEnd(e) {
+            e.preventDefault();
+            isDrawing = false;
+            activeCanvas = null;
+        }
+
+        function erase(e, canvasType) {
+            const canvas = canvasType === 'outline' ? outlineDisplayCanvas : displayCanvas;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.beginPath();
+            ctx.arc(x, y, parseInt(eraserSizeSlider.value) * scaleX, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function convertToSketch() {
+            if (!originalImage) return;
+
+            convertBtn.disabled = true;
+            convertBtn.textContent = 'Processing...';
+
+            const img = new Image();
+            img.onload = () => {
+                const ctx = processCanvas.getContext('2d');
+                processCanvas.width = img.width;
+                processCanvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+                const data = imageData.data;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                    data[i] = gray;
+                    data[i + 1] = gray;
+                    data[i + 2] = gray;
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+
+                const grayData = ctx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+                const edges = ctx.createImageData(processCanvas.width, processCanvas.height);
+
+                const sobelX = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+                const sobelY = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
+
+                const intensityFactor = parseInt(intensitySlider.value) / 50;
+
+                for (let y = 1; y < processCanvas.height - 1; y++) {
+                    for (let x = 1; x < processCanvas.width - 1; x++) {
+                        let pixelX = 0;
+                        let pixelY = 0;
+
+                        for (let ky = -1; ky <= 1; ky++) {
+                            for (let kx = -1; kx <= 1; kx++) {
+                                const idx = ((y + ky) * processCanvas.width + (x + kx)) * 4;
+                                const gray = grayData.data[idx];
+                                pixelX += gray * sobelX[ky + 1][kx + 1];
+                                pixelY += gray * sobelY[ky + 1][kx + 1];
+                            }
+                        }
+
+                        const magnitude = Math.sqrt(pixelX * pixelX + pixelY * pixelY);
+                        const edgeValue = 255 - Math.min(255, magnitude * intensityFactor);
+
+                        const idx = (y * processCanvas.width + x) * 4;
+                        edges.data[idx] = edgeValue;
+                        edges.data[idx + 1] = edgeValue;
+                        edges.data[idx + 2] = edgeValue;
+                        edges.data[idx + 3] = 255;
+                    }
+                }
+
+                ctx.putImageData(edges, 0, 0);
+
+                displayCanvas.width = processCanvas.width;
+                displayCanvas.height = processCanvas.height;
+                const displayCtx = displayCanvas.getContext('2d');
+                displayCtx.drawImage(processCanvas, 0, 0);
+
+                generateOutlineVersion();
+
+                shadedPlaceholder.classList.add('hidden');
+                convertBtn.classList.add('hidden');
+                downloadShadedBtn.classList.remove('hidden');
+                eraserPanel.classList.remove('hidden');
+                outlineSection.classList.remove('hidden');
+                intensitySlider.disabled = false;
+                sketchGenerated = true;
+                convertBtn.disabled = false;
+                convertBtn.textContent = 'Convert to Sketch';
+            };
+
+            img.src = originalImage;
+        }
+
+        function generateOutlineVersion() {
+            const ctx = outlineCanvas.getContext('2d');
+            outlineCanvas.width = processCanvas.width;
+            outlineCanvas.height = processCanvas.height;
+
+            const sourceData = processCanvas.getContext('2d').getImageData(0, 0, processCanvas.width, processCanvas.height);
+            const outlineData = ctx.createImageData(outlineCanvas.width, outlineCanvas.height);
+
+            const threshold = 130;
+
+            for (let i = 0; i < sourceData.data.length; i += 4) {
+                const brightness = sourceData.data[i];
+
+                if (brightness < threshold) {
+                    outlineData.data[i] = 0;
+                    outlineData.data[i + 1] = 0;
+                    outlineData.data[i + 2] = 0;
+                    outlineData.data[i + 3] = 255;
+                } else {
+                    outlineData.data[i] = 255;
+                    outlineData.data[i + 1] = 255;
+                    outlineData.data[i + 2] = 255;
+                    outlineData.data[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(outlineData, 0, 0);
+
+            outlineDisplayCanvas.width = outlineCanvas.width;
+            outlineDisplayCanvas.height = outlineCanvas.height;
+            const outlineDisplayCtx = outlineDisplayCanvas.getContext('2d');
+            outlineDisplayCtx.drawImage(outlineCanvas, 0, 0);
+
+            outlinePlaceholder.classList.add('hidden');
+            downloadOutlineBtn.classList.remove('hidden');
+        }
+
+        function downloadImage(version) {
+            const sourceCanvas = version === 'shaded' ? displayCanvas : outlineDisplayCanvas;
+            const format = document.querySelector('input[name="format"]:checked').value;
+
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = sourceCanvas.width;
+            exportCanvas.height = sourceCanvas.height;
+            const exportCtx = exportCanvas.getContext('2d');
+
+            if (format === 'jpeg') {
+                exportCtx.fillStyle = 'white';
+                exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            }
+            
+            exportCtx.drawImage(sourceCanvas, 0, 0);
+
+            const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+            const extension = format === 'jpeg' ? 'jpg' : 'png';
+            const quality = format === 'jpeg' ? 0.95 : 1.0;
+
+            const dataUrl = exportCanvas.toDataURL(mimeType, quality);
+
+            const link = document.createElement('a');
+            link.download = 'sketch-' + version + '.' + extension;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
